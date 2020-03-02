@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const customerShema = new Schema({
-  name: { type: String },
+  name: { type: String,default: ''},
   email: { type: String, unique: true },
-  phone: { type: String, unique: true },
-  gender: { type: String },
+  phone: { type: String, unique: true,default : '' },
+  gender: { type: String, default : 'male' },
   role: { type: String, default: "customer" }
 });
 

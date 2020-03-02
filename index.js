@@ -7,6 +7,9 @@ var server = require("http").Server(app);
 const bodyParser = require('body-parser');
 
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 
 let defaultController = require('./controllers/defaultController')();
 app.use("/", defaultController);

@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 let router = express.Router();
 
 let routes = function() {
-  router.route("/users").get((req, res) => {
+  router.route("/users").get(async (req, res) => {
     //   return res.status(200).json({
     //     data: 'asdfdsasf',
     //     statusCode: 200,
@@ -16,13 +16,18 @@ let routes = function() {
     var users = null;
 
     // Check search by Email
-    if (req.query.email) {
-      users = User.find({
-        email: req.query.email
-      });
-    } else {
-      users = User.find();
+    try {
+      if (req.query.email) {
+        users = await User.find({
+          email: req.query.email
+        });
+      } else {
+        users = await User.find();
+      }
+    } catch (error) {
+      console.log(error)
     }
+    
 
     return res.status(200).json({
       data: users,
@@ -31,13 +36,37 @@ let routes = function() {
     });
   });
 
-  router.route("/user").post((req, res) => {
-    let user = new User({
-      email: req.body.email ? req.body.email : "",
-      password: req.body.password ? req.body.password : ""
+  router.route('/user')
+    .post(async (req, res) => {
+        let user = new User({
+            email : req.body.email ? req.body.email : '',
+            password: req.body.password ? req.body.password : ''
+        });
+
+        user.save((err) => {
+            if (err) {
+                return res.status(200).json({
+                    data: err,
+                    statusCode: 100,
+                    message: 'Error'
+                });
+            }
+
+            return res.status(200).json({
+                data: user,
+                statusCode: 200,
+                message: 'Succceed'
+            });
+        });
     });
 
-    user.save(err => {
+  router.route("/users/create").post(async (req, res) => {
+    let user = new User({
+      email: req.body.email ? req.body.email : "",
+      name: req.body.name ? req.body.name : ""
+    });
+
+     user.save(err => {
       if (err) {
         return res.status(200).json({
           data: err,
