@@ -1,11 +1,15 @@
 const express = require('express'),
       port = 8888,
       http = require ('http');
-    
 const app = express();
+var server = require("http").Server(app);
+
+const bodyParser = require('body-parser');
+
+
 
 let defaultController = require('./controllers/defaultController')();
-app.use("/default", defaultController);
+app.use("/", defaultController);
 
 app.use((req, res, next) => {
   next(res.status(404).json({
@@ -15,4 +19,8 @@ app.use((req, res, next) => {
   }));
 });
 
-http.createServer (app).listen (port);
+server.listen(port, function() {
+  var datetime = new Date();
+    var message = "Server runnning on Port:- " + port + "\r\nStarted at :- " + datetime;
+    console.log(message);
+})
